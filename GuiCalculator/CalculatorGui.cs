@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Globalization;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace GuiCalculator
@@ -37,6 +38,20 @@ namespace GuiCalculator
         {
             _calculator = new Calculator();
             Initialization();
+            SetCulture();
+        }
+        
+        private void SetCulture()
+        {
+            Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("en-GB");
+            var currentCulture = Thread.CurrentThread.CurrentCulture.Name;
+            var ci = new CultureInfo(currentCulture)
+            {
+                NumberFormat = { NumberDecimalSeparator = "." },
+                DateTimeFormat = { DateSeparator = "." }
+            };
+            Thread.CurrentThread.CurrentCulture = ci;
+            Thread.CurrentThread.CurrentUICulture = ci;
         }
 
         private void Initialization()
