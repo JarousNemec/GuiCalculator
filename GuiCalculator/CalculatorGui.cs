@@ -56,8 +56,10 @@ namespace GuiCalculator
 
         private void Initialization()
         {
+            KeyPreview = true;
             Size = new Size(366, 558);
             Text = "Calculator";
+            KeyPress += OnKeyPress;
 
             _display = new Label();
             _display.Size = new Size(330, 75);
@@ -150,6 +152,69 @@ namespace GuiCalculator
             Controls.Add(_btnBackSpace);
         }
 
+        private void OnKeyPress(object sender, KeyPressEventArgs e)
+        {
+            switch (e.KeyChar)
+            {
+                case '0':
+                    WriteNumber("0");
+                    break;
+                case '1':
+                    WriteNumber("1");
+                    break;
+                case '2':
+                    WriteNumber("2");
+                    break;
+                case '3':
+                    WriteNumber("3");
+                    break;
+                case '4':
+                    WriteNumber("4");
+                    break;
+                case '5':
+                    WriteNumber("5");
+                    break;
+                case '6':
+                    WriteNumber("6");
+                    break;
+                case '7':
+                    WriteNumber("7");
+                    break;
+                case '8':
+                    WriteNumber("8");
+                    break;
+                case '9':
+                    WriteNumber("9");
+                    break;
+                case (char)Keys.Back:
+                    BtnBackSpaceOnClick(null, EventArgs.Empty);
+                    break;
+                case '-':
+                    BtnMinusOnClick(null, EventArgs.Empty);
+                    break;
+                case '+':
+                    BtnPlusOnClick(null, EventArgs.Empty);
+                    break;
+                case '.':
+                case ',':
+                    BtnPointOnClick(null, EventArgs.Empty);
+                    break;
+                case '/':
+                    BtnDivideOnClick(null, EventArgs.Empty);
+                    break;
+                case '*':
+                    BtnTimesOnClick(null, EventArgs.Empty);
+                    break;
+                case 'c':
+                case 'C':
+                    BtnClearOnClick(null, EventArgs.Empty);
+                    break;
+                case '=':
+                    BtnEqualsOnClick(null, EventArgs.Empty);
+                    break;
+            }
+        }
+
         private void InitNumberButton(Button button, int x, int y, string label)
         {
             InitButton(button, x, y, label);
@@ -208,6 +273,10 @@ namespace GuiCalculator
         {
             _display.Text = Math.Round(_calculator.Equals(GetNumberFromDisplay()), 5)
                 .ToString(CultureInfo.CurrentCulture);
+            if (_display.Text.Contains("."))
+            {
+                _pointActive = true;
+            }
             _hadResult = true;
         }
 
@@ -230,7 +299,12 @@ namespace GuiCalculator
         private void ClickOnNumberButton(object sender, EventArgs e)
         {
             Button clickedButton = (Button)sender;
-            _display.Text += clickedButton.Text;
+            WriteNumber(clickedButton.Text);
+        }
+
+        private void WriteNumber(string number)
+        {
+            _display.Text += number;
             if (_hadResult)
             {
                 _calculator.Clear();
